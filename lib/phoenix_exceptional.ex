@@ -1,0 +1,2 @@
+defmodule PhoenixExceptional do
+end
