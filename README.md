@@ -1,4 +1,4 @@
-# PhoenixExceptional
+# Phoenix/Exceptional
 
 **TODO: Add description**
 
@@ -21,4 +21,3 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
       [applications: [:phoenix_exceptional]]
     end
     ```
-

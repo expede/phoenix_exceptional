@@ -1,32 +1,48 @@
 defmodule PhoenixExceptional.Mixfile do
   use Mix.Project
 
+  def application, do: [applications: [:logger]]
   def project do
-    [app: :phoenix_exceptional,
-     version: "0.1.0",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
-  end
+    [
+      app:     :phoenix_exceptional,
+      name:    "Phoenix/Exceptional",
+      description: "Exceptional error/exception helpers for Phoenix",
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
-  def application do
-    [applications: [:logger]]
-  end
+      version: "1.0.0",
+      elixir:  "~> 1.3",
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
-  defp deps do
-    []
+      source_url:   "https://github.com/expede/phoenix_exceptional",
+      homepage_url: "https://github.com/expede/phoenix_exceptional",
+
+      package: [
+        maintainers: ["Brooklyn Zelenka"],
+        licenses: ["MIT"],
+        links: %{"GitHub" => "https://github.com/expede/phoenix_exceptional"}
+      ],
+
+      aliases: ["quality": ["test", "credo --strict"]],
+
+      build_embedded:  Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+
+      deps: [
+        {:exceptional,  "~> 2.0"},
+        {:phoenix_html, "~> 2.9"},
+
+        {:credo, "~> 0.5",  only: [:dev, :test]},
+
+        {:dialyxir, "~> 0.3",  only: :dev},
+        {:earmark,  "~> 1.0",  only: :dev},
+        {:ex_doc,   "~> 0.14", only: :dev},
+
+        {:inch_ex, "~> 0.5",  only: [:dev, :docs, :test]}
+      ],
+
+      docs: [
+        # logo: "./branding/logo.png",
+        extras: ["README.md"],
+        main: "readme"
+      ]
+    ]
   end
 end

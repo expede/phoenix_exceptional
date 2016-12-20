@@ -1,8 +1,5 @@
-defmodule PhoenixExceptionalTest do
+defmodule Phoenix.ExceptionalTest do
   use ExUnit.Case
-  doctest PhoenixExceptional
 
-  test "the truth" do
-    assert 1 + 1 == 2
-  end
+  doctest Phoenix.Exceptional.ViewHelper, [import: true]
 end

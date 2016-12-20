@@ -1,2 +1,2 @@
-defmodule PhoenixExceptional do
+defmodule Phoenix.Exceptional do
 end
