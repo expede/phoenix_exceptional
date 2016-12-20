@@ -22,7 +22,7 @@ This is often sufficient for simple JSON cases and pre-release HTML. It is recom
 ```elixir
 # /web/views/error_view.ex
 
-defmodule AwesomeApp do
+defmodule AwesomeApp.ErrorView do
   use Phoenix.Exceptional
 
   defrender :error, for: 401, do: "Not authorized"
