@@ -15,6 +15,11 @@ defmodule Phoenix.Exceptional.ViewHelper do
   @type simple   :: %{error: String.t}
   @type response :: simple | full
 
+  defmacro __using__(_) do
+    quote do
+      import unquote(__MODULE__)
+    end
+  end
 
   @doc ~S"""
   Generate simple views for Elixir exceptions
@@ -114,33 +119,22 @@ defmodule Phoenix.Exceptional.ViewHelper do
   ## Examples
 
       iex> render(:error, for: 404, format: :json, do: "Oh no!")
-      {:def, [context: Phoenix.Exceptional.ViewHelper, import: Kernel],
+      {
+        :def, [context: Phoenix.Exceptional.ViewHelper, import: Kernel],
         [
-          {:render, [context: Phoenix.Exceptional.ViewHelper],
-            ["404.json", {:error_info, [], Phoenix.Exceptional.ViewHelper}]
+          {
+            :render, [context: Phoenix.Exceptional.ViewHelper],
+            [
+              "404.json",
+              {:error_info, [], Phoenix.Exceptional.ViewHelper}
+            ]
           },
           [
             do: {
-              {
-                :.,
-                [],
-                [{:__aliases__, [alias: false], [:Phoenix, :View]}, :render]
-              },
+              {:., [], [Phoenix.Exceptional.ViewHelper, :render]},
               [],
               [
-                {:__MODULE__, [], Phoenix.Exceptional.ViewHelper},
-                {
-                  :<<>>,
-                  [],
-                  [
-                    {:::, [],
-                      [
-                        {{:., [], [Kernel, :to_string]}, [], [:json]},
-                        {:binary, [], Phoenix.Exceptional.ViewHelper}
-                      ]
-                    }
-                  ]
-                },
+                :json,
                 "Oh no!",
                 {:error_info, [], Phoenix.Exceptional.ViewHelper}
               ]
@@ -157,9 +151,8 @@ defmodule Phoenix.Exceptional.ViewHelper do
 
     quote do
       def render(unquote(template), error_info) do
-        Phoenix.View.render(
-          __MODULE__,
-          "#{unquote(format)}",
+        unquote(__MODULE__).render(
+          unquote(format),
           unquote(base_message),
           error_info
         )
