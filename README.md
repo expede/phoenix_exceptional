@@ -1,6 +1,6 @@
 # Phoenix/Exceptional
 
-Exceptional error/exception helpers for Phoenix
+[Exceptional](https://hex.pm/packages/exceptional) error/exception helpers for Phoenix
 
 [![Build Status](https://travis-ci.org/expede/phoenix_exceptional.svg?branch=master)](https://travis-ci.org/expede/phoenix_exceptional) [![Inline docs](http://inch-ci.org/github/expede/phoenix_exceptional.svg?branch=master)](http://inch-ci.org/github/expede/phoenix_exceptional) [![Deps Status](https://beta.hexfaktor.org/badge/all/github/expede/phoenix_exceptional.svg)](https://beta.hexfaktor.org/github/expede/phoenix_exceptional) [![hex.pm version](https://img.shields.io/hexpm/v/phoenix_exceptional.svg?style=flat)](https://hex.pm/packages/phoenix_exceptional) [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/phoenix_exceptional/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/expede/phoenix_exceptional/blob/master/LICENSE)
 
