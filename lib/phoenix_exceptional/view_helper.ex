@@ -37,7 +37,7 @@ defmodule Phoenix.Exceptional.ViewHelper do
     do: String.t
   ) :: ast
   defmacro defrender(:error, for: http_code, do: base_message) do
-    render(:errors, for: http_code, only: @formats, do: base_message)
+    render_errors(for: http_code, only: @formats, do: base_message)
   end
 
   @doc ~S"""
@@ -47,7 +47,7 @@ defmodule Phoenix.Exceptional.ViewHelper do
     :: ast
   defmacro defrender(:error, for: http_code, except: except, do: base_message) do
     only = Enum.reject(@formats, fn format -> Enum.member?(except, format) end)
-    render(:errors, for: http_code, only: only, do: base_message)
+    render_errors(for: http_code, only: only, do: base_message)
   end
 
   @doc ~S"""
@@ -55,8 +55,8 @@ defmodule Phoenix.Exceptional.ViewHelper do
   """
   @spec defrender(:error, for: non_neg_integer, only: [atom], do: String.t)
     :: ast
-  defmacro defrender(:error, for: http_code, only: formats, do: base_message) do
-    render(:errors, for: http_code, only: formats, do: base_message)
+  defmacro defrender_error(for: http_code, only: formats, do: base_message) do
+    render_errors(for: http_code, only: formats, do: base_message)
   end
 
   @doc ~S"""
@@ -64,61 +64,48 @@ defmodule Phoenix.Exceptional.ViewHelper do
 
   ## Examples
 
-      iex> render(:errors, for: 404, only: [:json], do: "Oh no!")
+      iex> render_errors(for: 404, only: [:json], do: "Oh no!")
       [
         {
-          :def,
-          [context: Exceptional.Phoenix.ViewHelper, import: Kernel],
+          :def, [context: Phoenix.Exceptional.ViewHelper, import: Kernel],
           [
             {
-              :render,
-              [context: Exceptional.Phoenix.ViewHelper],
+              :render, [context: Phoenix.Exceptional.ViewHelper],
               [
                 "404.json",
-                {:error_info, [], Exceptional.Phoenix.ViewHelper}
+                {:error_info, [], Phoenix.Exceptional.ViewHelper}
               ]
             },
-            [do: {
-              :render, [], [
-                {
-                  :<<>>, [], [
-                    {
-                      :::,
-                      [],
-                      [
-                        {
-                          {:., [], [Kernel, :to_string]},
-                          [],
-                          [:json]
-                        },
-                        {:binary, [], Exceptional.Phoenix.ViewHelper}
-                      ]
-                    }
-                  ]
-                },
-                "Oh no!",
-                {:error_info, [], Exceptional.Phoenix.ViewHelper}
-              ]
-            }]
+            [
+              do: {
+                {:., [], [Phoenix.Exceptional.ViewHelper, :render_error]},
+                [],
+                [
+                  :json,
+                  "Oh no!",
+                  {:error_info, [], Phoenix.Exceptional.ViewHelper}
+                ]
+              }
+            ]
           ]
         }
       ]
 
   """
-  @spec render(:errors, for: non_neg_integer, only: [atom], do: String.t)
+  @spec render_errors(for: non_neg_integer, only: [atom], do: String.t)
     :: response
-  def render(:errors, for: http_code, only: formats, do: base_message) do
+  def render_errors(for: http_code, only: formats, do: base_message) do
     Enum.map(formats, fn format ->
-      render(:error, for: http_code, format: format, do: base_message)
+      render_error(for: http_code, format: format, do: base_message)
     end)
   end
 
   @doc ~S"""
-  Generate a single error hander
+  Generate a single error handler
 
   ## Examples
 
-      iex> render(:error, for: 404, format: :json, do: "Oh no!")
+      iex> render_error(for: 404, format: :json, do: "Oh no!")
       {
         :def, [context: Phoenix.Exceptional.ViewHelper, import: Kernel],
         [
@@ -131,7 +118,7 @@ defmodule Phoenix.Exceptional.ViewHelper do
           },
           [
             do: {
-              {:., [], [Phoenix.Exceptional.ViewHelper, :render]},
+              {:., [], [Phoenix.Exceptional.ViewHelper, :render_error]},
               [],
               [
                 :json,
@@ -142,16 +129,15 @@ defmodule Phoenix.Exceptional.ViewHelper do
           ]
         ]
       }
-
   """
-  @spec render(String.t, for: non_neg_integer, format: atom, do: String.t)
+  @spec render_error(for: non_neg_integer, format: atom, do: String.t)
     :: response
-  def render(:error, for: http_code, format: format, do: base_message) do
+  def render_error(for: http_code, format: format, do: base_message) do
     template = "#{http_code}.#{format}"
 
     quote do
       def render(unquote(template), error_info) do
-        unquote(__MODULE__).render(
+        unquote(__MODULE__).render_error(
           unquote(format),
           unquote(base_message),
           error_info
@@ -165,12 +151,12 @@ defmodule Phoenix.Exceptional.ViewHelper do
 
   ## Examples
 
-      iex> render(:json, "I'm sorry, I can't do that Dave", %{})
+      iex> render_error(:json, "I'm sorry, I can't do that Dave", %{})
       %{error: "I'm sorry, I can't do that Dave"}
 
   """
-  @spec render(:html | :json, String.t, map) :: response
-  def render(:html, base_message, error_info) do
+  @spec render_error(:html | :json, String.t, map) :: response
+  def render_error(:html, base_message, error_info) do
     case error_info do
       %{conn: %{assigns: %{reason: %{message: detail}}}} ->
         "#{base_message}: #{detail}"
@@ -179,7 +165,7 @@ defmodule Phoenix.Exceptional.ViewHelper do
     end
   end
 
-  def render(:json, base_message, error_info) do
+  def render_error(:json, base_message, error_info) do
     case error_info do
       %{conn: %{assigns: %{reason: %{message: detail}}}} ->
         %{error: base_message, reason: detail}
