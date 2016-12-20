@@ -114,43 +114,40 @@ defmodule Phoenix.Exceptional.ViewHelper do
   ## Examples
 
       iex> render(:error, for: 404, format: :json, do: "Oh no!")
-      {
-        :def,
-        [context: Exceptional.Phoenix.ViewHelper, import: Kernel],
+      {:def, [context: Phoenix.Exceptional.ViewHelper, import: Kernel],
         [
-          {
-            :render,
-            [context: Exceptional.Phoenix.ViewHelper],
-            [
-              "404.json",
-              {:error_info, [], Exceptional.Phoenix.ViewHelper}
-            ]
+          {:render, [context: Phoenix.Exceptional.ViewHelper],
+            ["404.json", {:error_info, [], Phoenix.Exceptional.ViewHelper}]
           },
-          [do: {
-            :render, [], [
+          [
+            do: {
               {
-                :<<>>, [], [
-                  {
-                    :::,
-                    [],
-                    [
-                      {
-                        {:., [], [Kernel, :to_string]},
-                        [],
-                        [:json]
-                      },
-                      {:binary, [], Exceptional.Phoenix.ViewHelper}
-                    ]
-                  }
-                ]
+                :.,
+                [],
+                [{:__aliases__, [alias: false], [:Phoenix, :View]}, :render]
               },
-              "Oh no!",
-              {:error_info, [], Exceptional.Phoenix.ViewHelper}
-            ]
-          }]
+              [],
+              [
+                {:__MODULE__, [], Phoenix.Exceptional.ViewHelper},
+                {
+                  :<<>>,
+                  [],
+                  [
+                    {:::, [],
+                      [
+                        {{:., [], [Kernel, :to_string]}, [], [:json]},
+                        {:binary, [], Phoenix.Exceptional.ViewHelper}
+                      ]
+                    }
+                  ]
+                },
+                "Oh no!",
+                {:error_info, [], Phoenix.Exceptional.ViewHelper}
+              ]
+            }
+          ]
         ]
       }
-
 
   """
   @spec render(String.t, for: non_neg_integer, format: atom, do: String.t)
