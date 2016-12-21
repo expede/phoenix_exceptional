@@ -8,7 +8,7 @@ defmodule PhoenixExceptional.Mixfile do
       name:    "Phoenix/Exceptional",
       description: "Exceptional error/exception helpers for Phoenix",
 
-      version: "1.0.0",
+      version: "1.0.1",
       elixir:  "~> 1.3",
 
       source_url:   "https://github.com/expede/phoenix_exceptional",
@@ -27,7 +27,7 @@ defmodule PhoenixExceptional.Mixfile do
 
       deps: [
         {:exceptional,  "~> 2.0"},
-        {:phoenix_html, "~> 2.9"},
+        {:phoenix_html, "~> 2.6"},
 
         {:credo, "~> 0.5",  only: [:dev, :test]},
 
